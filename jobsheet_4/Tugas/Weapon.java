@@ -2,11 +2,13 @@ public class Weapon {
     private String name;
     private int damage;
     private int ammo;
+    private int baseAmmo;
 
     Weapon(String name, int damage, int ammo) {
         this.name = name;
         this.damage = damage;
         this.ammo = ammo;
+        this.baseAmmo = ammo;
     }
 
     public String getName() {
@@ -19,6 +21,10 @@ public class Weapon {
 
     public int getAmmo() {
         return ammo;
+    }
+
+    public void reload() {
+        this.ammo = baseAmmo;
     }
 
     public void oneShoot() {

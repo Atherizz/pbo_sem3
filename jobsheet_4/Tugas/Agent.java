@@ -30,6 +30,10 @@ public class Agent {
             System.out.println(this.name + " has no weapon to shoot.");
         }
 
+        if (this.weapon.getAmmo() == 0) {
+            this.weapon.reload();
+        } 
+
         int totalDamage = 0;
 
         for (int i = 0; i < hitCount; i++) {

@@ -7,7 +7,7 @@ public class MainValorant {
         Weapon operator = new Weapon("Operator", 200, 5);
         Weapon spectre = new Weapon("Spectre", 30, 25);
 
-        DuelistAgent jett = new DuelistAgent("Jett", 100, 50, "Tailwind");
+        DuelistAgent jett = new DuelistAgent("Jett", 100, 25, "Tailwind");
         jett.setWeapon(vandal);
 
         DuelistAgent phoenix = new DuelistAgent("Phoenix", 100, 50, "Curveball");
@@ -16,7 +16,7 @@ public class MainValorant {
         ControllerAgent brimstone = new ControllerAgent("Brimstone", 100, 75, "Sky Smoke");
         brimstone.setWeapon(operator);
 
-        ControllerAgent omen = new ControllerAgent("Omen", 100, 50, "Dark Cover");
+        ControllerAgent omen = new ControllerAgent("Omen", 100, 50, "Teleport");
         omen.setWeapon(spectre);
 
         Player p1 = new Player("Savero");   p1.setSelectedAgent(jett);
@@ -36,10 +36,29 @@ public class MainValorant {
         System.out.println("-- Team B --\n" + teamB.info());
 
         p1.shoot(p3, 5);
+        match.checkWinner();
         System.out.println();
-        System.out.println("Team A Score : " + teamA.getScore());
+
+        p1.shoot(p4, 2);
+        match.checkWinner();
+        System.out.println();
+
+        p2.shoot(p4, 2);
+        match.checkWinner();
+        System.out.println();
+
+        p1.shoot(p3, 5);
+        match.checkWinner();
+        System.out.println();
+
+        p1.shoot(p3, 5);
+        System.out.println();
+        match.checkWinner();
+
 
         p3.shoot(p4, 1);
+        System.out.println();
+        System.out.println("Team A Score : " + teamA.getScore());
         System.out.println("Team B Score : " + teamB.getScore());
 
 

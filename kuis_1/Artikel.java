@@ -1,8 +1,8 @@
 public class Artikel extends Konten{
     private String penulis;
 
-    public Artikel(String judul, Kursus kursus, String deskripsi, String penulis) {
-        super(judul, kursus, deskripsi);
+    public Artikel(int id, String judul, Kursus kursus, String deskripsi, String penulis) {
+        super(id, judul, kursus, deskripsi);
         this.penulis = penulis;
     }
 

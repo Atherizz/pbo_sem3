@@ -3,6 +3,11 @@ import java.util.Scanner;
 
 public class Main {
 
+    static ArrayList<Kursus> daftarKursus = new ArrayList<>();
+    static ArrayList<Konten> daftarKonten = new ArrayList<>();
+    static ArrayList<MataPelajaran> daftarMataPelajaran = new ArrayList<>();
+    static ArrayList<User> daftarUsers = new ArrayList<>();
+
     public static void tampilkanKursus(ArrayList<Kursus> daftarKursus) {
         for (Kursus kursus : daftarKursus) {
             String infoHarga = kursus.getIsBerbayar()
@@ -16,101 +21,106 @@ public class Main {
         }
     }
 
+    public static void tampilkanKonten(Kursus kursus) {
+        ArrayList<Konten> daftarKonten = kursus.getDaftarKonten();
+        for (Konten konten : daftarKonten) {
+
+            if (konten instanceof Artikel) {
+                ((Artikel) konten).tampilkanKonten();
+            } else if (konten instanceof Video) {
+                ((Video) konten).tampilkanKonten();
+            } else if (konten instanceof Kuis) {
+                ((Kuis) konten).tampilkanKonten();
+            }
+        }
+    }
+
+    public static void menuKelolaKonten(Kursus kursus, Scanner sc) {
+        int pilih;
+        do {
+            System.out.println("\n=== Kelola Konten: " + kursus.getJudul() + " ===");
+            System.out.println("1. Lihat Konten");
+            System.out.println("2. Tambah Konten");
+            System.out.println("3. Hapus Konten");
+            System.out.println("0. Kembali");
+            System.out.print("Pilih: ");
+            pilih = sc.nextInt();
+
+            switch (pilih) {
+                case 1:
+                    tampilkanKonten(kursus);
+                    break;
+                case 2:
+                    int id = daftarKonten.size() + 1;
+                    System.out.println("=== Tambah Konten ===");
+                    System.out.println("1. Artikel");
+                    System.out.println("2. Kuis");
+                    System.out.println("3. Video");
+                    System.out.print("Masukkan nomor tipe konten: ");
+                    int tipe = sc.nextInt();
+                    sc.nextLine();
+
+                    System.out.print("Judul konten: ");
+                    String judul = sc.nextLine();
+
+                    System.out.print("Deskripsi: ");
+                    String deskripsi = sc.nextLine();
+
+                    Konten kontenBaru = null;
+
+                    switch (tipe) {
+                        case 1: {
+                            System.out.print("Penulis: ");
+                            String penulis = sc.nextLine();
+                            kontenBaru = new Artikel(id, judul, kursus, deskripsi, penulis);
+                            break;
+                        }
+                        case 2: {
+                            System.out.print("Jumlah soal: ");
+                            int jumlahSoal = sc.nextInt();
+                            sc.nextLine();
+                            kontenBaru = new Kuis(id, judul, kursus, deskripsi, jumlahSoal);
+                            break;
+                        }
+                        case 3: {
+                            System.out.print("Durasi (detik): ");
+                            int durasi = sc.nextInt();
+                            sc.nextLine();
+                            kontenBaru = new Video(id, judul, kursus, deskripsi, durasi);
+                            break;
+                        }
+                        default:
+                            System.out.println("Tipe tidak valid.");
+                            break;
+                    }
+
+                    if (kontenBaru != null) {
+                        kursus.getDaftarKonten().add(kontenBaru);
+                        daftarKonten.add(kontenBaru);
+                        System.out.println("Konten berhasil ditambahkan dengan ID: " + kontenBaru.getId());
+                    }
+                    break;
+
+                case 3:
+                    tampilkanKonten(kursus);
+                    System.out.print("Masukkan id konten yang akan dihapus: ");
+                    int idKonten = sc.nextInt();
+                    kursus.hapusKonten(idKonten, daftarKonten);
+                    break;
+                case 0:
+                    System.out.println("Kembali ke menu kursus.");
+                    break;
+                default:
+                    System.out.println("Pilihan tidak valid.");
+            }
+        } while (pilih != 0);
+    }
+
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
 
-        Peserta peserta1 = new Peserta("budi", "budi@mail.com", "pass1", "S1 Informatika");
-        Peserta peserta2 = new Peserta("sari", "sari@mail.com", "pass2", "SMA");
-        Peserta peserta3 = new Peserta("doni", "doni@mail.com", "pass3", "S1 Sistem Informasi");
-        Peserta peserta4 = new Peserta("lisa", "lisa@mail.com", "pass4", "S2 Teknik Informatika");
-        Peserta peserta5 = new Peserta("agus", "agus@mail.com", "pass5", "Diploma TI");
-
-        Instruktur instruktur1 = new Instruktur("andi123", "andi@mail.com", "passA", "Andi", "Pemrograman Java");
-        Instruktur instruktur2 = new Instruktur("rani456", "rani@mail.com", "passB", "Rani", "Desain UI/UX");
-
-        ArrayList<User> daftarUsers = new ArrayList<>();
-        daftarUsers.add(peserta1);
-        daftarUsers.add(peserta2);
-        daftarUsers.add(peserta3);
-        daftarUsers.add(peserta4);
-        daftarUsers.add(peserta5);
-        daftarUsers.add(instruktur1);
-        daftarUsers.add(instruktur2);
-
-        ArrayList<Kursus> daftarKursus = new ArrayList<>();
-
-        daftarKursus.add(new Kursus(1, "Belajar Java Dasar", new MataPelajaran("Java Dasar"), instruktur1, true));
-        daftarKursus.add(new Kursus(2, "Belajar Java Lanjutan", new MataPelajaran("Java Lanjutan"), instruktur1, true));
-        daftarKursus.add(new Kursus(3, "UI/UX untuk Pemula", new MataPelajaran("UI/UX Dasar"), instruktur2, false));
-        daftarKursus
-                .add(new Kursus(4, "Membangun Mobile App", new MataPelajaran("Desain Mobile App"), instruktur2, true));
-        daftarKursus
-                .add(new Kursus(5, "Database MySQL Praktis", new MataPelajaran("Database MySQL"), instruktur1, true));
-        daftarKursus.add(new Kursus(6, "Algoritma & Pemrograman", new MataPelajaran("Algoritma Pemrograman"),
-                instruktur1, false));
-        daftarKursus
-                .add(new Kursus(7, "Frontend dengan React", new MataPelajaran("React Frontend"), instruktur2, true));
-        daftarKursus.add(new Kursus(8, "Backend dengan Spring Boot", new MataPelajaran("Spring Boot Backend"),
-                instruktur1, true));
-        daftarKursus.add(new Kursus(9, "Machine Learning Dasar", new MataPelajaran("Machine Learning Dasar"),
-                instruktur1, true));
-        daftarKursus
-                .add(new Kursus(10, "UI/UX Prototyping", new MataPelajaran("UI/UX Prototyping"), instruktur2, true));
-
-        daftarKursus.get(0).setHarga(500000);
-        daftarKursus.get(1).setHarga(750000);
-        daftarKursus.get(2).setHarga(0);
-        daftarKursus.get(3).setHarga(400000);
-        daftarKursus.get(4).setHarga(600000);
-        daftarKursus.get(5).setHarga(0);
-        daftarKursus.get(6).setHarga(550000);
-        daftarKursus.get(7).setHarga(800000);
-        daftarKursus.get(8).setHarga(1000000);
-        daftarKursus.get(9).setHarga(450000);
-
-        Kursus k1 = daftarKursus.get(0);
-        Video c1 = new Video("Video: Intro Java", k1, "Pengenalan Java & tooling", 600);
-        k1.getDaftarKonten().add(c1);
-
-        Kursus k2 = daftarKursus.get(1);
-        Kuis c2 = new Kuis("Kuis: OOP Dasar", k2, "Uji konsep class, object, dan encapsulation", 12);
-        k2.getDaftarKonten().add(c2);
-
-        Kursus k3 = daftarKursus.get(2);
-        Artikel c3 = new Artikel("Artikel: Prinsip UI/UX", k3, "Heuristics dan user flow dasar",
-                k3.getInstruktur().getNama());
-        k3.getDaftarKonten().add(c3);
-
-        Kursus k4 = daftarKursus.get(3);
-        Video c4 = new Video("Video: Layout Mobile Grid", k4, "Grid system & spacing scale", 630);
-        k4.getDaftarKonten().add(c4);
-
-        Kursus k5 = daftarKursus.get(4);
-        Artikel c5 = new Artikel("Artikel: Indexing MySQL", k5, "EXPLAIN, index, dan optimasi query",
-                k5.getInstruktur().getNama());
-        k5.getDaftarKonten().add(c5);
-
-        Kursus k6 = daftarKursus.get(5);
-        Kuis c6 = new Kuis("Kuis: Algoritma Dasar", k6, "Seleksi, perulangan, array sederhana", 15);
-        k6.getDaftarKonten().add(c6);
-
-        Kursus k7 = daftarKursus.get(6);
-        Video c7 = new Video("Video: React Hooks 101", k7, "useState, useEffect, lifting state up", 700);
-        k7.getDaftarKonten().add(c7);
-
-        Kursus k8 = daftarKursus.get(7);
-        Artikel c8 = new Artikel("Artikel: REST API Spring Boot", k8, "Controller, service, repository pattern",
-                k8.getInstruktur().getNama());
-        k8.getDaftarKonten().add(c8);
-
-        Kursus k9 = daftarKursus.get(8);
-        Video c9 = new Video("Video: ML untuk Pemula", k9, "Supervised vs unsupervised, dataset & metric", 900);
-        k9.getDaftarKonten().add(c9);
-
-        Kursus k10 = daftarKursus.get(9);
-        Kuis c10 = new Kuis("Kuis: Prototyping UI/UX", k10, "Wireframe, flow, dan usability", 8);
-        k10.getDaftarKonten().add(c10);
+        InisiasiObjek.initiateObject(daftarKursus, daftarKonten, daftarMataPelajaran, daftarUsers);
 
         int pilihan;
         User userLogin = null;
@@ -157,7 +167,9 @@ public class Main {
                     System.out.print("Masukkan pendidikan : ");
                     String regPendidikan = sc.next();
 
-                    Peserta pesertaBaru = new Peserta(regNama, regEmail, regPassword, regPendidikan);
+                    int nextId = daftarUsers.size() + 1;
+
+                    Peserta pesertaBaru = new Peserta(nextId, regNama, regEmail, regPassword, regPendidikan);
 
                     daftarUsers.add(pesertaBaru);
                     System.out.println("Akun berhasil didaftarkan!\n");
@@ -212,6 +224,7 @@ public class Main {
                 System.out.println("3. Kursus Saya");
                 System.out.println("4. Cek Saldo");
                 System.out.println("5. Isi Saldo");
+                System.out.println("6. Informasi Peserta");
                 System.out.println("0. Logout");
                 System.out.print("Pilih: ");
                 pilih = sc.nextInt();
@@ -246,7 +259,7 @@ public class Main {
                     case 3:
                         Kursus kursusPilihan = null;
                         while (true) {
-                            System.out.println("Kursus yang diikuti....");
+                            System.out.println("=== Kursus yang diikuti ===");
                             ArrayList<Kursus> kursusPeserta = ((Peserta) userLogin).getDaftarKursus();
                             if (kursusPeserta.isEmpty()) {
                                 System.out.println("Anda belum terdaftar pada kursus apapun!");
@@ -276,25 +289,16 @@ public class Main {
                         }
 
                         if (kursusPilihan != null) {
-                            ArrayList<Konten> daftarKonten = kursusPilihan.getDaftarKonten();
-                            for (Konten konten : daftarKonten) {
-                                if (konten instanceof Artikel) {
-                                    ((Artikel) konten).tampilkanKonten();
-                                } else if (konten instanceof Video) {
-                                    ((Video) konten).tampilkanKonten();
-                                } else if (konten instanceof Kuis) {
-                                    ((Kuis) konten).tampilkanKonten();
-                                }
-                            }
+                            tampilkanKonten(kursusPilihan);
                         }
 
                         break;
                     case 4:
-                        System.out.println("Cek Saldo User : " + userLogin.getName());
+                        System.out.println("=== Cek Saldo User : " + userLogin.getName() + " ===");
                         System.out.println("Saldo : Rp. " + userLogin.getSaldo());
                         break;
                     case 5:
-                        System.out.println("Isi Saldo");
+                        System.out.println("=== Isi Saldo ===");
                         int nominal;
                         while (true) {
                             System.out.print("Masukkan Nominal Saldo : ");
@@ -309,8 +313,12 @@ public class Main {
                         }
 
                         break;
+                    case 6:
+                        System.out.println("== Informasi User ==");
+                        ((Peserta) userLogin).tampilkanInfo();
+                        break;
                     case 0:
-                        System.out.println("Logout...");
+                        System.out.println("=== Logout ===");
                         break;
                     default:
                         System.out.println("Pilihan tidak valid!");
@@ -318,11 +326,140 @@ public class Main {
             } while (pilih != 0);
 
         } else if (userLogin instanceof Instruktur) {
-            System.out.println("=== MENU INSTRUKTUR ===");
+            int pilih = 0;
+            do {
+                System.out.println("=== MENU INSTRUKTUR ===");
+                System.out.println("1. Kursus Saya");
+                System.out.println("2. Cek Saldo");
+                System.out.println("3. Informasi User");
+                System.out.println("4. Tambah Kursus");
+                System.out.println("0. Logout");
+                System.out.print("Pilih: ");
+                pilih = sc.nextInt();
 
+                switch (pilih) {
+                    case 1:
+                        System.out.println("=== Kursus Saya ===");
+                        ArrayList<Kursus> listKursusInstruktur = ((Instruktur) userLogin).getDaftarKursus();
+
+                        if (listKursusInstruktur.isEmpty()) {
+                            System.out.println("Anda belum memiliki kursus.");
+                            break;
+                        }
+
+                        tampilkanKursus(listKursusInstruktur);
+
+                        System.out.print("Masukkan id kursus yang ingin dikelola : ");
+                        int idPilihan = sc.nextInt();
+
+                        Kursus kursusDipilih = null;
+
+                        for (Kursus k : listKursusInstruktur) {
+                            if (k.getId() == idPilihan) {
+                                kursusDipilih = k;
+                                break;
+                            }
+                        }
+
+                        if (kursusDipilih != null) {
+                            menuKelolaKonten(kursusDipilih, sc);
+                        } else {
+                            System.out.println("Kursus tidak ditemukan.");
+                        }
+
+                        break;
+                    case 2:
+                        System.out.println("=== Cek Saldo User : " + userLogin.getName() + " ===");
+                        System.out.println("Saldo : Rp. " + userLogin.getSaldo());
+                        break;
+                    case 3:
+                        System.out.println("== Informasi User ==");
+                        ((Instruktur) userLogin).tampilkanInfo();
+                        break;
+                    case 4:
+                        System.out.println("== Tambah Kursus Baru");
+                        sc.nextLine();
+                        System.out.print("Judul kursus: ");
+                        String judul = sc.nextLine().trim();
+
+                        System.out.println("Pilih Mata Pelajaran (ketik ID):");
+                        for (MataPelajaran m : daftarMataPelajaran) {
+                            System.out.println(m.getId() + " - " + m.getNama());
+                        }
+
+                        MataPelajaran mp = null;
+                        while (mp == null) {
+                            System.out.print("ID Mapel: ");
+                            int idMapel = sc.nextInt();
+                            for (MataPelajaran m : daftarMataPelajaran) {
+                                if (m.getId() == idMapel) {
+                                    mp = m;
+                                }
+                            }
+                            if (mp == null)
+                                System.out.println("ID Mapel tidak ditemukan. Coba lagi.");
+                        }
+
+
+                        // isBerbayar + validasi harga (tanpa helper)
+                        boolean isBerbayar = false;
+                        while (true) {
+                            System.out.print("Apakah kursus berbayar? (y/n): ");
+                            String yn = sc.next().trim().toLowerCase();
+                            if (yn.equals("y")) {
+                                isBerbayar = true;
+                                break;
+                            }
+                            if (yn.equals("n")) {
+                                isBerbayar = false;
+                                break;
+                            }
+                            System.out.println("Input harus 'y' atau 'n'.");
+                        }
+
+                        int harga = 0;
+                        if (isBerbayar) {
+                            while (true) {
+                                System.out.print("Harga (>= 0): ");
+                                if (sc.hasNextInt()) {
+                                    harga = sc.nextInt();
+                                    if (harga >= 0)
+                                        break;
+                                    System.out.println("Harga tidak boleh negatif. Coba lagi.");
+                                } else {
+                                    System.out.println("Masukkan angka yang valid.");
+                                    sc.next(); 
+                                }
+                            }
+                        }
+
+                        int newId = daftarKursus.size() + 1;
+                        Kursus baru = new Kursus(newId, judul, mp, ((Instruktur) userLogin), isBerbayar);
+                        baru.setHarga(isBerbayar ? harga : 0);
+                        daftarKursus.add(baru);
+
+                        System.out.println("\nKursus berhasil dibuat!");
+                        System.out.println("- ID        : " + newId);
+                        System.out.println("- Judul     : " + judul);
+                        System.out.println("- Mapel     : " + mp.getNama());
+                        System.out.println("- Instruktur: " + userLogin.getName());
+                        System.out.println("- Berbayar  : " + (isBerbayar ? "Ya" : "Tidak"));
+                        if (isBerbayar)
+                            System.out.println("- Harga     : " + harga);
+                        System.out.println();
+                        break;
+
+                    case 0:
+                        System.out.println("Logout...");
+                        break;
+
+                    default:
+                        System.out.println("Pilihan tidak valid, coba lagi!");
+                }
+
+            } while (pilih != 0);
         }
 
-        sc.close();
     }
 
 }

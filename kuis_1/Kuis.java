@@ -1,8 +1,8 @@
 public class Kuis extends Konten{
     private int jumlahSoal;
 
-    public Kuis(String judul, Kursus kursus, String deskripsi, int jumlahSoal) {
-        super(judul, kursus, deskripsi);
+    public Kuis(int id, String judul, Kursus kursus, String deskripsi, int jumlahSoal) {
+        super(id, judul, kursus, deskripsi);
         this.jumlahSoal = jumlahSoal;
     }
 

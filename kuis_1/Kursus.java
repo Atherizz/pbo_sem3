@@ -81,6 +81,23 @@ public class Kursus {
         daftarKonten.add(konten);
     }
 
+    public void hapusKonten(int idKonten, ArrayList<Konten> listKonten) {
+    Konten target = null;
+    for (Konten k : daftarKonten) {
+        if (k.getId() == idKonten) {
+            target = k;
+            break;
+        }
+    }
+    if (target != null) {
+        daftarKonten.remove(target);
+        listKonten.remove(target);
+        System.out.println("Konten berhasil dihapus: " + target.getJudul());
+    } else {
+        System.out.println("Konten tidak ditemukan di kursus ini!");
+    }
+}
+
     public String toString() {
         String info = "";
         info += "Mata Pelajaran: " + mataPelajaran.getNama() + "\n";

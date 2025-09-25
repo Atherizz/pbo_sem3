@@ -4,8 +4,8 @@ public class Peserta extends User {
     private String jenjangPendidikan;
     private ArrayList<Kursus> daftarKursus;
 
-    public Peserta(String name, String email, String password, String jenjangPendidikan) {
-        super(name, email, password);
+    public Peserta(int id, String name, String email, String password, String jenjangPendidikan) {
+        super(id, name, email, password);
         this.jenjangPendidikan = jenjangPendidikan;
         this.daftarKursus = new ArrayList<>();
     }
@@ -48,15 +48,21 @@ public class Peserta extends User {
         }
     }
 
-    public String toString() {
-        String info = "";
-        info += "Nama: " + getName() + "\n";
-        info += "Jenjang Pendidikan: " + getJenjangPendidikan() + "\n";
-        info += "Daftar Kursus:\n";
+public void tampilkanInfo() {
+    System.out.println("====================================");
+    System.out.println("Nama              : " + getName());
+    System.out.println("Jenjang Pendidikan: " + getJenjangPendidikan());
+    System.out.println("Daftar Kursus     :");
+    
+    if (daftarKursus.isEmpty()) {
+        System.out.println("- Belum mengambil kursus");
+    } else {
         for (Kursus kursus : daftarKursus) {
-            info += "- " + kursus.getMataPelajaran().getNama() + " oleh " + kursus.getInstruktur().getNama() + "\n";
+            System.out.println("- " + kursus.getMataPelajaran().getNama() +
+                               " oleh " + kursus.getInstruktur().getNama());
         }
-        return info;
     }
+    System.out.println("====================================");
+}
 
 }

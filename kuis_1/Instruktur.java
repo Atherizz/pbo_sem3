@@ -5,16 +5,18 @@ public class Instruktur extends User {
     private String keahlian;
     private ArrayList<Kursus> daftarKursus;
 
-    Instruktur(String username, String email, String password, String nama, String keahlian) {
-        super(username, email, password);
+    Instruktur(int id, String username, String email, String password, String nama, String keahlian) {
+        super(id, username, email, password);
         this.nama = nama;
         this.keahlian = keahlian;
         this.daftarKursus = new ArrayList<>();
     }
+
     public ArrayList<Kursus> getDaftarKursus() {
         return daftarKursus;
     }
-    
+
+
     public String getNama() {
         return nama;
     }

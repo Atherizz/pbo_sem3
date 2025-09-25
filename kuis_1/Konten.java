@@ -1,12 +1,18 @@
 public class Konten {
+    private int id;
     private String judul;
     private Kursus kursus;
     private String deskripsi;
 
-    public Konten(String judul, Kursus kursus, String deskripsi) {
+    public Konten(int id, String judul, Kursus kursus, String deskripsi) {
+        this.id = id;
         this.judul = judul;
         this.kursus = kursus;
         this.deskripsi = deskripsi;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getJudul(){

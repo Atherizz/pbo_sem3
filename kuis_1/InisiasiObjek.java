@@ -37,23 +37,27 @@ public class InisiasiObjek {
         // Java
         Kursus k1 = new Kursus(1, "Belajar Java Dasar", mp1, instruktur1, true);
         Kursus k2 = new Kursus(2, "Belajar Java Lanjutan", mp1, instruktur1, true);
+        mp1.tambahKursus(k1); mp1.tambahKursus(k2);
 
         // UI/UX
         Kursus k3 = new Kursus(3, "UI/UX untuk Pemula", mp2, instruktur2, false);
         Kursus k4 = new Kursus(4, "UI/UX Prototyping", mp2, instruktur2, true);
+        mp2.tambahKursus(k3); mp2.tambahKursus(k4);
 
         // Mobile Development
         Kursus k5 = new Kursus(5, "Dasar Pengembangan Mobile", mp3, instruktur2, true);
         Kursus k6 = new Kursus(6, "Kotlin Android Pemula", mp3, instruktur2, false);
+        mp3.tambahKursus(k5); mp3.tambahKursus(k6);
 
         // Database MySQL
         Kursus k7 = new Kursus(7, "Database MySQL Praktis", mp4, instruktur1, true);
         Kursus k8 = new Kursus(8, "Optimasi Query MySQL", mp4, instruktur1, true);
+        mp4.tambahKursus(k7); mp4.tambahKursus(k8);
 
         // Machine Learning
         Kursus k9 = new Kursus(9, "Machine Learning Dasar", mp5, instruktur1, true);
         Kursus k10 = new Kursus(10, "Evaluasi Model ML", mp5, instruktur1, true);
-
+        mp5.tambahKursus(k9); mp5.tambahKursus(k10);
         // === Hubungkan ke instruktur + daftarkan ke daftarKursus (global) ===
         // Andi (instruktur1)
         instruktur1.tambahKursus(k1);

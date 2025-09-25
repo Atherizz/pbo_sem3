@@ -8,6 +8,7 @@ public class MataPelajaran {
     public MataPelajaran(int id, String nama) {
         this.id = id;
         this.nama = nama;
+        this.listKursus = new ArrayList<>();
     }
 
     public int getId() {

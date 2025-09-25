@@ -8,16 +8,20 @@ public class Main {
     static ArrayList<MataPelajaran> daftarMataPelajaran = new ArrayList<>();
     static ArrayList<User> daftarUsers = new ArrayList<>();
 
-    public static void tampilkanKursus(ArrayList<Kursus> daftarKursus) {
-        for (Kursus kursus : daftarKursus) {
-            String infoHarga = kursus.getIsBerbayar()
-                    ? "Rp" + kursus.getHarga()
-                    : "FREE";
+    public static void tampilkanKursus(ArrayList<MataPelajaran> daftarMataPelajaran) {
+        for (MataPelajaran mp : daftarMataPelajaran) {
+            System.out.println("Mata Pelajaran : " + mp.getNama());
+            for (Kursus kursus : mp.getListKursus()) {
+                String infoHarga = kursus.getIsBerbayar()
+                        ? "Rp" + kursus.getHarga()
+                        : "FREE";
 
-            System.out.println(
-                    kursus.getId() + ". " + kursus.getJudul() +
-                            " | Instruktur: " + kursus.getInstruktur().getNama() +
-                            " | " + infoHarga);
+                System.out.println(
+                        kursus.getId() + ". " + kursus.getJudul() +
+                                " | Instruktur: " + kursus.getInstruktur().getNama() +
+                                " | " + infoHarga);
+
+            }
         }
     }
 
@@ -122,344 +126,337 @@ public class Main {
 
         InisiasiObjek.initiateObject(daftarKursus, daftarKonten, daftarMataPelajaran, daftarUsers);
 
-        int pilihan;
-        User userLogin = null;
+        while (true) { 
+            int pilihan;
+            User userLogin = null;
 
-        do {
-            System.out.println("===== MENU =====");
-            System.out.println("1. Register");
-            System.out.println("2. Login");
-            System.out.println("3. Keluar");
-            System.out.print("Pilih menu: ");
-            pilihan = sc.nextInt();
+            do {
+                System.out.println("===== MENU =====");
+                System.out.println("1. Register");
+                System.out.println("2. Login");
+                System.out.println("3. Keluar");
+                System.out.print("Pilih menu: ");
+                pilihan = sc.nextInt();
 
-            switch (pilihan) {
-                case 1:
-                    System.out.println("=== REGISTER PESERTA ===");
-                    System.out.print("Masukkan nama       : ");
-                    String regNama = sc.next();
-                    String regEmail;
+                switch (pilihan) {
+                    case 1:
+                        System.out.println("=== REGISTER PESERTA ===");
+                        System.out.print("Masukkan nama       : ");
+                        String regNama = sc.next();
+                        String regEmail;
 
-                    while (true) {
+                        while (true) {
+                            System.out.print("Masukkan email      : ");
+                            regEmail = sc.next();
 
-                        System.out.print("Masukkan email      : ");
-                        regEmail = sc.next();
+                            boolean isRegistered = false;
+                            for (User user : daftarUsers) {
+                                if (user.getEmail().equals(regEmail)) {
+                                    isRegistered = true;
+                                    break;
+                                }
+                            }
 
-                        boolean isRegistered = false;
-
-                        for (User user : daftarUsers) {
-                            if (user.getEmail().equals(regEmail)) {
-                                isRegistered = true;
+                            if (isRegistered) {
+                                System.out.println("Email sudah digunakan! silahkan coba lagi");
+                            } else {
                                 break;
                             }
                         }
 
-                        if (isRegistered) {
-                            System.out.println("Email sudah digunakan! silahkan coba lagi");
-                        } else {
-                            break;
-                        }
+                        System.out.print("Masukkan password   : ");
+                        String regPassword = sc.next();
 
-                    }
-                    System.out.print("Masukkan password   : ");
-                    String regPassword = sc.next();
+                        System.out.print("Masukkan pendidikan : ");
+                        String regPendidikan = sc.next();
 
-                    System.out.print("Masukkan pendidikan : ");
-                    String regPendidikan = sc.next();
+                        int nextId = daftarUsers.size() + 1;
+                        Peserta pesertaBaru = new Peserta(nextId, regNama, regEmail, regPassword, regPendidikan);
 
-                    int nextId = daftarUsers.size() + 1;
+                        daftarUsers.add(pesertaBaru);
+                        System.out.println("Akun berhasil didaftarkan!\n");
 
-                    Peserta pesertaBaru = new Peserta(nextId, regNama, regEmail, regPassword, regPendidikan);
+                        pilihan = 2;
+                       
+                        break;
 
-                    daftarUsers.add(pesertaBaru);
-                    System.out.println("Akun berhasil didaftarkan!\n");
-                    pilihan = 2;
+                    case 2:
+                        while (true) {
+                            System.out.println("======= LOGIN ========");
+                            System.out.print("Masukkan email : ");
+                            String inputEmail = sc.next();
+                            System.out.print("Masukkan password : ");
+                            String inputPassword = sc.next();
 
-                    break;
+                            for (User user : daftarUsers) {
+                                if (user.getEmail().equalsIgnoreCase(inputEmail) &&
+                                        user.authenticate(inputPassword)) {
+                                    userLogin = user;
+                                    break;
+                                }
+                            }
 
-                case 2:
-
-                    while (true) {
-
-                        System.out.println("======= LOGIN ========");
-                        System.out.print("Masukkan email : ");
-                        String inputEmail = sc.next();
-                        System.out.print("Masukkan password : ");
-                        String inputPassword = sc.next();
-
-                        for (User user : daftarUsers) {
-                            if (user.getEmail().equalsIgnoreCase(inputEmail) &&
-                                    user.authenticate(inputPassword)) {
-                                userLogin = user;
+                            if (userLogin != null) {
+                                System.out.println("Login berhasil!\n");
+                            
+                                pilihan = 3;
                                 break;
+                            } else {
+                                System.out.println("Email atau password salah.\n");
                             }
                         }
+                        break;
 
-                        if (userLogin != null) {
-                            System.out.println("Login berhasil!\n");
-                            pilihan = 3;
-                            break;
-                        } else {
-                            System.out.println("Email atau password salah.\n");
-                        }
+                    case 3:
+                        System.out.println("Keluar dari program...");
+                        break;
 
-                    }
-                    break;
+                    default:
+                        System.out.println("Pilihan tidak valid, coba lagi!\n");
+                }
+            } while (pilihan != 3 && userLogin == null);
 
-                case 3:
-                    System.out.println("Keluar dari program...");
-                    break;
-
-                default:
-                    System.out.println("Pilihan tidak valid, coba lagi!\n");
+            if (userLogin == null && pilihan == 3) {
+                break;
             }
-        } while (pilihan != 3);
 
-        if (userLogin instanceof Peserta) {
-            int pilih;
-            do {
-                System.out.println("=== MENU PESERTA ===");
-                System.out.println("1. Melihat Daftar Kursus");
-                System.out.println("2. Pendaftaran Kursus");
-                System.out.println("3. Kursus Saya");
-                System.out.println("4. Cek Saldo");
-                System.out.println("5. Isi Saldo");
-                System.out.println("6. Informasi Peserta");
-                System.out.println("0. Logout");
-                System.out.print("Pilih: ");
-                pilih = sc.nextInt();
+            if (userLogin instanceof Peserta) {
+                int pilih;
+                do {
+                    System.out.println("=== MENU PESERTA ===");
+                    System.out.println("1. Melihat Daftar Kursus");
+                    System.out.println("2. Pendaftaran Kursus");
+                    System.out.println("3. Kursus Saya");
+                    System.out.println("4. Cek Saldo");
+                    System.out.println("5. Isi Saldo");
+                    System.out.println("6. Informasi Peserta");
+                    System.out.println("0. Logout");
+                    System.out.print("Pilih: ");
+                    pilih = sc.nextInt();
 
-                switch (pilih) {
-                    case 1:
-                        System.out.println("Menampilkan daftar kursus...");
-                        tampilkanKursus(daftarKursus);
-                        break;
-                    case 2:
-                        while (true) {
-                            tampilkanKursus(daftarKursus);
-                            System.out.print("Masukkan ID kursus yang ingin diikuti: ");
-                            int idKursus = sc.nextInt();
-                            Kursus kursusDiikuti = null;
-                            for (Kursus kursus : daftarKursus) {
-                                if (kursus.getId() == idKursus) {
-                                    kursusDiikuti = kursus;
-                                    break;
-                                }
-                            }
-
-                            if (kursusDiikuti == null) {
-                                System.out.println("Kursus tidak ditemukan! ");
-                            } else {
-                                ((Peserta) userLogin).pendaftaranKursus(kursusDiikuti);
-                                break;
-                            }
-                        }
-
-                        break;
-                    case 3:
-                        Kursus kursusPilihan = null;
-                        while (true) {
-                            System.out.println("=== Kursus yang diikuti ===");
-                            ArrayList<Kursus> kursusPeserta = ((Peserta) userLogin).getDaftarKursus();
-                            if (kursusPeserta.isEmpty()) {
-                                System.out.println("Anda belum terdaftar pada kursus apapun!");
-                                break;
-                            }
-                            for (Kursus kursus : kursusPeserta) {
-                                System.out.println(kursus.getId() + ". " + kursus.getJudul() +
-                                        " | Instruktur: " + kursus.getInstruktur().getNama());
-                            }
-
-                            System.out.print("Masuk ke kursus (masukkan id): ");
-                            int idKursusPilihan = sc.nextInt();
-
-                            for (Kursus kursus : kursusPeserta) {
-                                if (kursus.getId() == idKursusPilihan) {
-                                    kursusPilihan = kursus;
-                                    break;
-                                }
-                            }
-
-                            if (kursusPilihan == null) {
-                                System.out.println("Kursus tidak ditemukan!");
-                            } else {
-                                break;
-                            }
-
-                        }
-
-                        if (kursusPilihan != null) {
-                            tampilkanKonten(kursusPilihan);
-                        }
-
-                        break;
-                    case 4:
-                        System.out.println("=== Cek Saldo User : " + userLogin.getName() + " ===");
-                        System.out.println("Saldo : Rp. " + userLogin.getSaldo());
-                        break;
-                    case 5:
-                        System.out.println("=== Isi Saldo ===");
-                        int nominal;
-                        while (true) {
-                            System.out.print("Masukkan Nominal Saldo : ");
-                            nominal = sc.nextInt();
-                            if (nominal < 0) {
-                                System.out.println("Saldo tidak boleh negatif!");
-                            } else {
-                                userLogin.setSaldo(nominal);
-                                break;
-                            }
-
-                        }
-
-                        break;
-                    case 6:
-                        System.out.println("== Informasi User ==");
-                        ((Peserta) userLogin).tampilkanInfo();
-                        break;
-                    case 0:
-                        System.out.println("=== Logout ===");
-                        break;
-                    default:
-                        System.out.println("Pilihan tidak valid!");
-                }
-            } while (pilih != 0);
-
-        } else if (userLogin instanceof Instruktur) {
-            int pilih = 0;
-            do {
-                System.out.println("=== MENU INSTRUKTUR ===");
-                System.out.println("1. Kursus Saya");
-                System.out.println("2. Cek Saldo");
-                System.out.println("3. Informasi User");
-                System.out.println("4. Tambah Kursus");
-                System.out.println("0. Logout");
-                System.out.print("Pilih: ");
-                pilih = sc.nextInt();
-
-                switch (pilih) {
-                    case 1:
-                        System.out.println("=== Kursus Saya ===");
-                        ArrayList<Kursus> listKursusInstruktur = ((Instruktur) userLogin).getDaftarKursus();
-
-                        if (listKursusInstruktur.isEmpty()) {
-                            System.out.println("Anda belum memiliki kursus.");
+                    switch (pilih) {
+                        case 1:
+                            System.out.println("Menampilkan daftar kursus...");
+                            tampilkanKursus(daftarMataPelajaran);
                             break;
-                        }
-
-                        tampilkanKursus(listKursusInstruktur);
-
-                        System.out.print("Masukkan id kursus yang ingin dikelola : ");
-                        int idPilihan = sc.nextInt();
-
-                        Kursus kursusDipilih = null;
-
-                        for (Kursus k : listKursusInstruktur) {
-                            if (k.getId() == idPilihan) {
-                                kursusDipilih = k;
-                                break;
-                            }
-                        }
-
-                        if (kursusDipilih != null) {
-                            menuKelolaKonten(kursusDipilih, sc);
-                        } else {
-                            System.out.println("Kursus tidak ditemukan.");
-                        }
-
-                        break;
-                    case 2:
-                        System.out.println("=== Cek Saldo User : " + userLogin.getName() + " ===");
-                        System.out.println("Saldo : Rp. " + userLogin.getSaldo());
-                        break;
-                    case 3:
-                        System.out.println("== Informasi User ==");
-                        ((Instruktur) userLogin).tampilkanInfo();
-                        break;
-                    case 4:
-                        System.out.println("== Tambah Kursus Baru");
-                        sc.nextLine();
-                        System.out.print("Judul kursus: ");
-                        String judul = sc.nextLine().trim();
-
-                        System.out.println("Pilih Mata Pelajaran (ketik ID):");
-                        for (MataPelajaran m : daftarMataPelajaran) {
-                            System.out.println(m.getId() + " - " + m.getNama());
-                        }
-
-                        MataPelajaran mp = null;
-                        while (mp == null) {
-                            System.out.print("ID Mapel: ");
-                            int idMapel = sc.nextInt();
-                            for (MataPelajaran m : daftarMataPelajaran) {
-                                if (m.getId() == idMapel) {
-                                    mp = m;
-                                }
-                            }
-                            if (mp == null)
-                                System.out.println("ID Mapel tidak ditemukan. Coba lagi.");
-                        }
-
-
-                        // isBerbayar + validasi harga (tanpa helper)
-                        boolean isBerbayar = false;
-                        while (true) {
-                            System.out.print("Apakah kursus berbayar? (y/n): ");
-                            String yn = sc.next().trim().toLowerCase();
-                            if (yn.equals("y")) {
-                                isBerbayar = true;
-                                break;
-                            }
-                            if (yn.equals("n")) {
-                                isBerbayar = false;
-                                break;
-                            }
-                            System.out.println("Input harus 'y' atau 'n'.");
-                        }
-
-                        int harga = 0;
-                        if (isBerbayar) {
+                        case 2:
                             while (true) {
-                                System.out.print("Harga (>= 0): ");
-                                if (sc.hasNextInt()) {
-                                    harga = sc.nextInt();
-                                    if (harga >= 0)
+                                tampilkanKursus(daftarMataPelajaran);
+                                System.out.print("Masukkan ID kursus yang ingin diikuti: ");
+                                int idKursus = sc.nextInt();
+                                Kursus kursusDiikuti = null;
+                                for (Kursus kursus : daftarKursus) {
+                                    if (kursus.getId() == idKursus) {
+                                        kursusDiikuti = kursus;
                                         break;
-                                    System.out.println("Harga tidak boleh negatif. Coba lagi.");
+                                    }
+                                }
+                                if (kursusDiikuti == null) {
+                                    System.out.println("Kursus tidak ditemukan! ");
                                 } else {
-                                    System.out.println("Masukkan angka yang valid.");
-                                    sc.next(); 
+                                    ((Peserta) userLogin).pendaftaranKursus(kursusDiikuti);
+                                    break;
                                 }
                             }
-                        }
+                            break;
+                        case 3:
+                            Kursus kursusPilihan = null;
+                            while (true) {
+                                System.out.println("=== Kursus yang diikuti ===");
+                                ArrayList<Kursus> kursusPeserta = ((Peserta) userLogin).getDaftarKursus();
+                                if (kursusPeserta.isEmpty()) {
+                                    System.out.println("Anda belum terdaftar pada kursus apapun!");
+                                    break;
+                                }
+                                for (Kursus kursus : kursusPeserta) {
+                                    System.out.println(kursus.getId() + ". " + kursus.getJudul() +
+                                            " | Instruktur: " + kursus.getInstruktur().getNama());
+                                }
+                                System.out.print("Masuk ke kursus (masukkan id): ");
+                                int idKursusPilihan = sc.nextInt();
+                                for (Kursus kursus : kursusPeserta) {
+                                    if (kursus.getId() == idKursusPilihan) {
+                                        kursusPilihan = kursus;
+                                        break;
+                                    }
+                                }
+                                if (kursusPilihan == null) {
+                                    System.out.println("Kursus tidak ditemukan!");
+                                } else {
+                                    break;
+                                }
+                            }
+                            if (kursusPilihan != null) {
+                                tampilkanKonten(kursusPilihan);
+                            }
+                            break;
+                        case 4:
+                            System.out.println("=== Cek Saldo User : " + userLogin.getName() + " ===");
+                            System.out.println("Saldo : Rp. " + userLogin.getSaldo());
+                            break;
+                        case 5:
+                            System.out.println("=== Isi Saldo ===");
+                            int nominal;
+                            while (true) {
+                                System.out.print("Masukkan Nominal Saldo : ");
+                                nominal = sc.nextInt();
+                                if (nominal < 0) {
+                                    System.out.println("Saldo tidak boleh negatif!");
+                                } else {
+                                    userLogin.setSaldo(nominal);
+                                    break;
+                                }
+                            }
+                            break;
+                        case 6:
+                            System.out.println("== Informasi User ==");
+                            ((Peserta) userLogin).tampilkanInfo();
+                            break;
+                        case 0:
+                            System.out.println("=== Logout ===");
+                            break;
+                        default:
+                            System.out.println("Pilihan tidak valid!");
+                    }
+                } while (pilih != 0);
 
-                        int newId = daftarKursus.size() + 1;
-                        Kursus baru = new Kursus(newId, judul, mp, ((Instruktur) userLogin), isBerbayar);
-                        baru.setHarga(isBerbayar ? harga : 0);
-                        daftarKursus.add(baru);
+                continue;
+            } else if (userLogin instanceof Instruktur) {
+                int pilih = 0;
+                do {
+                    System.out.println("=== MENU INSTRUKTUR ===");
+                    System.out.println("1. Kursus Saya");
+                    System.out.println("2. Cek Saldo");
+                    System.out.println("3. Informasi User");
+                    System.out.println("4. Tambah Kursus");
+                    System.out.println("0. Logout");
+                    System.out.print("Pilih: ");
+                    pilih = sc.nextInt();
 
-                        System.out.println("\nKursus berhasil dibuat!");
-                        System.out.println("- ID        : " + newId);
-                        System.out.println("- Judul     : " + judul);
-                        System.out.println("- Mapel     : " + mp.getNama());
-                        System.out.println("- Instruktur: " + userLogin.getName());
-                        System.out.println("- Berbayar  : " + (isBerbayar ? "Ya" : "Tidak"));
-                        if (isBerbayar)
-                            System.out.println("- Harga     : " + harga);
-                        System.out.println();
-                        break;
+                    switch (pilih) {
+                        case 1:
+                            System.out.println("=== Kursus Saya ===");
+                            ArrayList<Kursus> listKursusInstruktur = ((Instruktur) userLogin).getDaftarKursus();
+                            if (listKursusInstruktur.isEmpty()) {
+                                System.out.println("Anda belum memiliki kursus.");
+                                break;
+                            }
+                            for (Kursus kursus : listKursusInstruktur) {
+                                String infoHarga = kursus.getIsBerbayar() ? "Rp" + kursus.getHarga() : "FREE";
+                                System.out.println(
+                                        kursus.getId() + ". " + kursus.getJudul() +
+                                                " | Instruktur: " + kursus.getInstruktur().getNama() +
+                                                " | " + infoHarga);
+                            }
+                            System.out.print("Masukkan id kursus yang ingin dikelola : ");
+                            int idPilihan = sc.nextInt();
+                            Kursus kursusDipilih = null;
+                            for (Kursus k : listKursusInstruktur) {
+                                if (k.getId() == idPilihan) {
+                                    kursusDipilih = k;
+                                    break;
+                                }
+                            }
+                            if (kursusDipilih != null) {
+                                menuKelolaKonten(kursusDipilih, sc);
+                            } else {
+                                System.out.println("Kursus tidak ditemukan.");
+                            }
+                            break;
 
-                    case 0:
-                        System.out.println("Logout...");
-                        break;
+                        case 2:
+                            System.out.println("=== Cek Saldo User : " + userLogin.getName() + " ===");
+                            System.out.println("Saldo : Rp. " + userLogin.getSaldo());
+                            break;
 
-                    default:
-                        System.out.println("Pilihan tidak valid, coba lagi!");
-                }
+                        case 3:
+                            System.out.println("== Informasi User ==");
+                            ((Instruktur) userLogin).tampilkanInfo();
+                            break;
 
-            } while (pilih != 0);
-        }
+                        case 4:
+                            System.out.println("== Tambah Kursus Baru");
+                            sc.nextLine();
+                            System.out.print("Judul kursus: ");
+                            String judul = sc.nextLine().trim();
 
+                            System.out.println("Pilih Mata Pelajaran (ketik ID):");
+                            for (MataPelajaran m : daftarMataPelajaran) {
+                                System.out.println(m.getId() + " - " + m.getNama());
+                            }
+
+                            MataPelajaran mp = null;
+                            while (mp == null) {
+                                System.out.print("ID Mapel: ");
+                                int idMapel = sc.nextInt();
+                                for (MataPelajaran m : daftarMataPelajaran) {
+                                    if (m.getId() == idMapel) {
+                                        mp = m;
+                                    }
+                                }
+                                if (mp == null)
+                                    System.out.println("ID Mapel tidak ditemukan. Coba lagi.");
+                            }
+
+                            boolean isBerbayar = false;
+                            while (true) {
+                                System.out.print("Apakah kursus berbayar? (y/n): ");
+                                String yn = sc.next().trim().toLowerCase();
+                                if (yn.equals("y")) {
+                                    isBerbayar = true;
+                                    break;
+                                }
+                                if (yn.equals("n")) {
+                                    isBerbayar = false;
+                                    break;
+                                }
+                                System.out.println("Input harus 'y' atau 'n'.");
+                            }
+
+                            int harga = 0;
+                            if (isBerbayar) {
+                                while (true) {
+                                    System.out.print("Harga (>= 0): ");
+                                    if (sc.hasNextInt()) {
+                                        harga = sc.nextInt();
+                                        if (harga >= 0)
+                                            break;
+                                        System.out.println("Harga tidak boleh negatif. Coba lagi.");
+                                    } else {
+                                        System.out.println("Masukkan angka yang valid.");
+                                        sc.next();
+                                    }
+                                }
+                            }
+
+                            int newId = daftarKursus.size() + 1;
+                            Kursus baru = new Kursus(newId, judul, mp, ((Instruktur) userLogin), isBerbayar);
+                            baru.setHarga(isBerbayar ? harga : 0);
+                            daftarKursus.add(baru);
+
+                            System.out.println("\nKursus berhasil dibuat!");
+                            System.out.println("- ID        : " + newId);
+                            System.out.println("- Judul     : " + judul);
+                            System.out.println("- Mapel     : " + mp.getNama());
+                            System.out.println("- Instruktur: " + userLogin.getName());
+                            System.out.println("- Berbayar  : " + (isBerbayar ? "Ya" : "Tidak"));
+                            if (isBerbayar)
+                                System.out.println("- Harga     : " + harga);
+                            System.out.println();
+                            break;
+
+                        case 0:
+                            System.out.println("Logout...");
+                            break;
+
+                        default:
+                            System.out.println("Pilihan tidak valid, coba lagi!");
+                    }
+                } while (pilih != 0);
+
+                continue;
+            }
+        } 
     }
 
 }

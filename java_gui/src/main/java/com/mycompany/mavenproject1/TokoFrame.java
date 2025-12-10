@@ -1,21 +1,11 @@
 package com.mycompany.mavenproject1;
 
-/**
- * Aplikasi Kasir Toko dengan Implementasi Konsep OOP
- * - Interface: ProdukOperations, TransaksiOperations
- * - Inheritance: Produk, Transaksi, DetailTransaksi
- * - Polymorphism: Service classes implements interfaces
- * - Encapsulation: Private fields dengan getter/setter
- * 
- * @author Atherizz
- */
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
 public class TokoFrame extends JFrame {
-    // UI Components
     private JComboBox<String> kategoriComboBox;
     private JComboBox<String> produkComboBox;
     private JTextField hargaProdukField;
@@ -26,15 +16,13 @@ public class TokoFrame extends JFrame {
     private JTable table;
     private JTextArea receiptArea;
     
-    // Business Logic - Mendemonstrasikan Polymorphism
     private ProdukOperations produkService;
     private TransaksiOperations transaksiService;
     private double totalBelanja = 0;
     
     public TokoFrame() {
-        super("Aplikasi Kasir Toko - OOP Implementation");
+        super("Aplikasi Kasir Toko");
         
-        // Dependency Injection & Polymorphism
         this.produkService = new ProdukService();
         this.transaksiService = new TransaksiService();
         
@@ -350,7 +338,6 @@ public class TokoFrame extends JFrame {
             int idTransaksi = transaksiService.saveTransaksi(transaksi);
             
             if (idTransaksi > 0) {
-                // Generate struk
                 String strukText = generateStruk(idTransaksi);
                 receiptArea.setText(strukText);
                 

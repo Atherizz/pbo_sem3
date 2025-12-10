@@ -1,7 +1,6 @@
 package com.mycompany.mavenproject1;
 
-
-public class Produk {
+public class Produk extends BaseModel {
     private String nama;
     private String kategori;
     private double harga;
@@ -9,6 +8,7 @@ public class Produk {
     private int jumlah; 
     
     public Produk(String nama, String kategori, double harga, int stok) {
+        super(); 
         this.nama = nama;
         this.kategori = kategori;
         this.harga = harga;
@@ -16,8 +16,14 @@ public class Produk {
         this.jumlah = 1;
     }
     
+
     public double hitungNilai() {
         return harga * jumlah;
+    }
+    
+    @Override
+    public String getDisplayInfo() {
+        return String.format("%s - %s (Rp %.0f)", nama, kategori, harga);
     }
 
     public String getNama() {

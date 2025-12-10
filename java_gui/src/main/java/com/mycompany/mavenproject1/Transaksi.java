@@ -4,24 +4,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Model class untuk Transaksi
- * Mendemonstrasikan konsep Encapsulation dan Composition
- */
-public class Transaksi {
-    private int idTransaksi;
+public class Transaksi extends BaseModel {
     private Date tanggal;
     private double totalBelanja;
     private int jumlahItem;
     private List<DetailTransaksi> detailList;
     
     public Transaksi() {
+        super();
         this.detailList = new ArrayList<>();
         this.tanggal = new Date();
     }
     
     public Transaksi(int idTransaksi, Date tanggal, double totalBelanja, int jumlahItem) {
-        this.idTransaksi = idTransaksi;
+        super(idTransaksi);
         this.tanggal = tanggal;
         this.totalBelanja = totalBelanja;
         this.jumlahItem = jumlahItem;
@@ -40,13 +36,17 @@ public class Transaksi {
         jumlahItem = detailList.size();
     }
     
-    // Getters and Setters
+    @Override
+    public String getDisplayInfo() {
+        return String.format("Transaksi #%d - %d item(s) - Rp %.0f", id, jumlahItem, totalBelanja);
+    }
+    
     public int getIdTransaksi() {
-        return idTransaksi;
+        return id; 
     }
     
     public void setIdTransaksi(int idTransaksi) {
-        this.idTransaksi = idTransaksi;
+        this.id = idTransaksi; 
     }
     
     public Date getTanggal() {

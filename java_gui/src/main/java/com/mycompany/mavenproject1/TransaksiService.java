@@ -1,8 +1,10 @@
 package com.mycompany.mavenproject1;
 
 import java.sql.*;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Service class untuk operasi Transaksi
@@ -14,6 +16,18 @@ public class TransaksiService implements TransaksiOperations {
     public TransaksiService() {
         // Dependency Injection - Polymorphism
         this.produkService = new ProdukService();
+    }
+    
+    // Helper method untuk format Rupiah
+    public static String formatRupiah(double amount) {
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        return formatter.format(amount).replace(",00", "");
+    }
+    
+    // Helper method untuk parse Rupiah ke double
+    public static double parseRupiah(String rupiah) {
+        return Double.parseDouble(rupiah.replace("Rp", "")
+                .replace(".", "").replace(",", ".").trim());
     }
     
     /**

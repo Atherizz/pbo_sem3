@@ -4,10 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Service class untuk operasi Produk
- * Mendemonstrasikan konsep Interface Implementation dan Polymorphism
- */
+
 public class ProdukService implements ProdukOperations {
     
     /**

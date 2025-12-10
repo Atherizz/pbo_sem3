@@ -1,15 +1,12 @@
 package com.mycompany.mavenproject1;
 
-/**
- * Model class untuk Produk
- * Mendemonstrasikan konsep Encapsulation
- */
+
 public class Produk {
     private String nama;
     private String kategori;
     private double harga;
     private int stok;
-    private int jumlah; // jumlah yang dibeli
+    private int jumlah; 
     
     public Produk(String nama, String kategori, double harga, int stok) {
         this.nama = nama;
@@ -19,14 +16,10 @@ public class Produk {
         this.jumlah = 1;
     }
     
-    /**
-     * Method untuk menghitung nilai (harga * jumlah)
-     */
     public double hitungNilai() {
         return harga * jumlah;
     }
-    
-    // Getters and Setters (Encapsulation)
+
     public String getNama() {
         return nama;
     }

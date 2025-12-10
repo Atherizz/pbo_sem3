@@ -6,34 +6,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Service class untuk operasi Transaksi
- * Mendemonstrasikan konsep Interface Implementation dan Polymorphism
- */
 public class TransaksiService implements TransaksiOperations {
     private ProdukOperations produkService;
     
     public TransaksiService() {
-        // Dependency Injection - Polymorphism
         this.produkService = new ProdukService();
     }
     
-    // Helper method untuk format Rupiah
     public static String formatRupiah(double amount) {
         NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
         return formatter.format(amount).replace(",00", "");
     }
     
-    // Helper method untuk parse Rupiah ke double
     public static double parseRupiah(String rupiah) {
         return Double.parseDouble(rupiah.replace("Rp", "")
                 .replace(".", "").replace(",", ".").trim());
     }
     
-    /**
-     * Implementasi method dari interface TransaksiOperations
-     * Mendemonstrasikan Polymorphism
-     */
     @Override
     public int saveTransaksi(Transaksi transaksi) throws Exception {
         int idTransaksi = -1;
@@ -43,15 +32,13 @@ public class TransaksiService implements TransaksiOperations {
             conn = DatabaseConnection.getConnection();
             conn.setAutoCommit(false); // Start transaction
             
-            // Insert ke tabel transaksi
             String queryTransaksi = "INSERT INTO transaksi (total_belanja, jumlah_item) VALUES (?, ?)";
             PreparedStatement pstmtTransaksi = conn.prepareStatement(queryTransaksi, 
                     Statement.RETURN_GENERATED_KEYS);
             pstmtTransaksi.setDouble(1, transaksi.getTotalBelanja());
             pstmtTransaksi.setInt(2, transaksi.getJumlahItem());
             pstmtTransaksi.executeUpdate();
-            
-            // Dapatkan ID transaksi yang baru dibuat
+
             ResultSet rs = pstmtTransaksi.getGeneratedKeys();
             if (rs.next()) {
                 idTransaksi = rs.getInt(1);
@@ -59,7 +46,6 @@ public class TransaksiService implements TransaksiOperations {
             rs.close();
             pstmtTransaksi.close();
             
-            // Insert ke tabel detail_transaksi
             String queryDetail = "INSERT INTO detail_transaksi " +
                     "(id_transaksi, nama_produk, kategori, harga, jumlah, subtotal) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
@@ -74,20 +60,19 @@ public class TransaksiService implements TransaksiOperations {
                 pstmtDetail.setDouble(6, detail.getSubtotal());
                 pstmtDetail.addBatch();
                 
-                // Update stok produk menggunakan polymorphism
                 produkService.updateStok(detail.getNamaProduk(), detail.getJumlah());
             }
             
             pstmtDetail.executeBatch();
             pstmtDetail.close();
             
-            conn.commit(); // Commit transaction
+            conn.commit(); 
             conn.setAutoCommit(true);
             
         } catch (SQLException e) {
             if (conn != null) {
                 try {
-                    conn.rollback(); // Rollback jika error
+                    conn.rollback();
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }

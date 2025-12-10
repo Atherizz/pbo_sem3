@@ -1,9 +1,5 @@
 package com.mycompany.mavenproject1;
 
-/**
- * Model class untuk Detail Transaksi
- * Mendemonstrasikan konsep Encapsulation
- */
 public class DetailTransaksi {
     private int idDetail;
     private int idTransaksi;
@@ -35,7 +31,6 @@ public class DetailTransaksi {
         this.subtotal = subtotal;
     }
     
-    // Getters and Setters
     public int getIdDetail() {
         return idDetail;
     }
